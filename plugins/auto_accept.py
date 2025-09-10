@@ -7,7 +7,7 @@ logger = LOGGER("auto_accept.py")
 
 
 @Bot.on_chat_join_request(filters.group | filters.channel)
-async def auto_accept(client: bot, message: ChatJoinRequest):
+async def auto_accept(client: Bot, message: ChatJoinRequest):
     chat, user = message.chat, message.from_user
     
     # remove those two when public the repo
