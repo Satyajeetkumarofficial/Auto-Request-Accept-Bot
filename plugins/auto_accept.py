@@ -4,6 +4,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ChatPermi
 from pyrogram.enums import ChatAction
 from config import LOGGER, OWNER_ID
 logger = LOGGER("auto_accept.py")
+import asyncio
 
 
 
