@@ -2,7 +2,7 @@ import os, random
 from config import START_PIC, START_MSG, ABOUT_MSG, CMD_MSG
 from pyrogram import Client, filters
 from pyrogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton 
-from pyrogram.enums import ParseMode
+from pyrogram.enums import ParseMode, ChatAction
 from bot import Bot
 
 
