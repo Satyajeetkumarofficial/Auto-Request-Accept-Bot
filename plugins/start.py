@@ -1,4 +1,5 @@
 import os, random
+import asyncio
 from config import START_PIC, START_MSG, ABOUT_MSG, CMD_MSG
 from pyrogram import Client, filters
 from pyrogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton 
@@ -11,6 +12,9 @@ from bot import Bot
 async def start_command(client: Client, message: Message):
   # chat action
   await client.send_chat_action(message.chat.id, ChatAction.PLAYING)
+
+  # 2.5 s wait
+  await asyncio.sleep(2.5)
   
   # buttons 
   reply_btns = InlineKeyboardMarkup(
