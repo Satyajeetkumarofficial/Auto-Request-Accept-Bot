@@ -69,7 +69,7 @@ async def callback_queries(client: Bot, query: CallbackQuery):
     #-- About --#
     if query.data == "about":
         await query.message.edit_text(
-            text = ABOUT_MSG.format(mention=query.from_user.mention,
+            text = ABOUT_MSG.format(mention=query.from_user.mention),
             disable_web_page_preview = True, 
             parse_mode = ParseMode.HTML,
             reply_markup = InlineKeyboardMarkup(
