@@ -1,5 +1,5 @@
 #--tg message handling and others--#
-pyrogram
+pyrofork
 
 #--http requests handling--#
 aiohttp
