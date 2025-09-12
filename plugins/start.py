@@ -11,7 +11,7 @@ from bot import Bot
 async def start_command(client: Client, message: Message):
   # chat action
   await client.send_chat_action(message.chat.id, ChatAction.PLAYING)
-  bot_username = await client.get_me()
+  bot_username = (await client.get_me()).username
   # buttons 
   reply_btns = InlineKeyboardMarkup(
     [
@@ -33,7 +33,7 @@ async def start_command(client: Client, message: Message):
     caption = START_MSG.format(
       mention = message.from_user.mention),
     reply_markup = reply_btns,
-    parsemode=ParseMode.HTML
+    parse_mode=ParseMode.HTML
   )
   
 #-- added to group or channel --#
