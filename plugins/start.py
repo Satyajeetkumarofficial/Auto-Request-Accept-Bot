@@ -17,7 +17,7 @@ async def start_command(client: Client, message: Message):
     [
       [
         InlineKeyboardButton("Aᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ᴄʜᴀᴛ", url=f"https://t.me/{bot_username}?startgroup=botstart")
-      ]
+      ],
       [
         InlineKeyboardButton("✏️ Aʙᴏᴜᴛ", callback_data="about"),
         InlineKeyboardButton("💨 Cᴏᴍᴍᴀɴᴅs", callback_data="cmd")
@@ -32,7 +32,8 @@ async def start_command(client: Client, message: Message):
     photo = photo,
     caption = START_MSG.format(
       mention = message.from_user.mention),
-    reply_markup = reply_btns
+    reply_markup = reply_btns,
+    parsemode=ParseMode.HTML
   )
   
 #-- added to group or channel --#
