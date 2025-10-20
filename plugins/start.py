@@ -4,7 +4,7 @@ from pyrogram import Client, filters
 from pyrogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton 
 from pyrogram.enums import ParseMode, ChatAction
 from bot import Bot
-from .database import add_user
+from database.database import add_user
 
 
 #-- 🫆 start command --#
