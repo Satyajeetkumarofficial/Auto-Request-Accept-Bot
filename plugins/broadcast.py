@@ -3,7 +3,7 @@ import asyncio
 import config
 from pyrogram import Client, filters
 from bot import Bot 
-from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated 
+from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated, RPCError
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from pyrogram.enums import ParseMode
 from motor.motor_asyncio import AsyncIOMotorClient 
@@ -12,9 +12,9 @@ broadcast_cache = {}
 
 @Bot.on_message(filters.incoming & filters.private & filters.user(config.OWNER_ID) & ~filters.command(["start", "report", "sendMessage", "users"]))
 async def broadcast_handler(client: Bot, message): 
-    # ignore commands
-    if message.text and message.text.startswith("/"):
-        return 
+    '''# ignore messages from the owner (safety)
+    if message.from_user.id == config.OWNER_ID:
+        return'''
 
     broadcast_cache[message.from_user.id] = message 
 
@@ -58,7 +58,7 @@ async def confirm(client: Bot, query: CallbackQuery):
 
 # ------ Main Broadcast Func (Optimized with async batches) ------- # 
 async def start_broadcast(client: Bot, status_msg, broadcast_msg):
-    users = await get_all_users() 
+    users = [u for u in await get_all_users() if u != config.OWNER_ID] 
     total_users = len(users) 
 
     total = successful = blocked = deleted = failed = 0 
@@ -108,6 +108,8 @@ async def start_broadcast(client: Bot, status_msg, broadcast_msg):
             except InputUserDeactivated:
                 await del_user(user_id)
                 deleted += 1
+            except RPCError:
+                failed += 1
             except:
                 failed += 1
             total += 1
