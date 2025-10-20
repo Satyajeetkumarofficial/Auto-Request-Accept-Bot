@@ -10,7 +10,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 
 broadcast_cache = {}
 
-@Bot.on_message(filters.incoming & filters.private & filters.user(config.OWNER_ID))
+@Bot.on_message(filters.incoming & filters.private & filters.user(config.OWNER_ID) & ~filters.command(["start", "report", "sendMessage", "users"]))
 async def broadcast_handler(client: Bot, message): 
     # ignore commands
     if message.text and message.text.startswith("/"):
