@@ -4,6 +4,7 @@ from pyrogram import Client, filters
 from pyrogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton 
 from pyrogram.enums import ParseMode, ChatAction
 from bot import Bot
+from .database import add_user
 
 
 #-- 🫆 start command --#
@@ -11,7 +12,11 @@ from bot import Bot
 async def start_command(client: Client, message: Message):
   # chat action
   await client.send_chat_action(message.chat.id, ChatAction.PLAYING)
-  bot_username = (await client.get_me()).username
+  
+  # save user id to mongodb
+  await add_user(message.from_user.id) 
+  
+  bot_username = await client.get_me() # username get
   # buttons 
   reply_btns = InlineKeyboardMarkup(
     [
@@ -32,8 +37,7 @@ async def start_command(client: Client, message: Message):
     photo = photo,
     caption = START_MSG.format(
       mention = message.from_user.mention),
-    reply_markup = reply_btns,
-    parse_mode=ParseMode.HTML
+    reply_markup = reply_btns
   )
   
 #-- added to group or channel --#
@@ -93,7 +97,7 @@ async def callback_queries(client: Bot, query: CallbackQuery):
                 [
                     [
                         InlineKeyboardButton("✏️ Aʙᴏᴜᴛ", callback_data="about"),
-                        InlineKeyboardButton("🔳 Bᴀᴄᴋ", callback_data="cmd")
+                        InlineKeyboardButton("💨 Cᴏᴍᴍᴀɴᴅs", callback_data="cmd")
                     ]
                 ]
             )
