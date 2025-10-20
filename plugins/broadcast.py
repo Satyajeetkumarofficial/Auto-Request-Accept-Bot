@@ -10,7 +10,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 
 broadcast_cache = {}
 
-@Bot.on_message(filters.incoming & filters.private & filters.user(config.OWNER_ID) & ~filters.command(["start", "report", "sendMessage", "users"]))
+@Bot.on_message(filters.incoming & filters.private & filters.user(config.OWNER_ID) & ~filters.command(["start", "report", "sendmessage", "users"]))
 async def broadcast_handler(client: Bot, message): 
     '''# ignore messages from the owner (safety)
     if message.from_user.id == config.OWNER_ID:
