@@ -1,4 +1,4 @@
-from .database import del_user, get_all_users
+from database.database import del_user, get_all_users
 import asyncio
 import config
 from pyrogram import Client, filters
