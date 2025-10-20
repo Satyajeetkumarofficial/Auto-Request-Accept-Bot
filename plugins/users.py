@@ -15,21 +15,21 @@ async def list_users(client: Bot, message: Message):
         await message.reply_text("No users found in database.")
         return
 
-    reply_text = f"**Total Users:** {total_users}\n\n"
+    reply_text = f"<b>Total Users:</b> {total_users}\n\n"
     
     for idx, user_id in enumerate(users, 1):
         try:
             user = await client.get_users(user_id)  # Fetch current Telegram info
-            reply_text += f"{idx}. {user.mention} ID: {user.id}\n"
+            reply_text += f"{idx}. <a href='tg://user?id={user.id}'>{user.first_name}</a> ID: {user.id}\n"
         except Exception:
             reply_text += f"{idx}. User ID: {user_id} (Cannot fetch info)\n"
 
-    # Send as multiple messages if too long
+    # Split message if too long
     if len(reply_text) > 4000:
         for i in range(0, len(reply_text), 4000):
-            await message.reply_text(reply_text[i:i+4000], parse_mode=ParseMode.MARKDOWN)
+            await message.reply_text(reply_text[i:i+4000], parse_mode=ParseMode.HTML)
     else:
-        await message.reply_text(reply_text, parse_mode=ParseMode.MARKDOWN)
+        await message.reply_text(reply_text, parse_mode=ParseMode.HTML)
 
 
 # --- /sendMessage <user_id> <message> --- #
@@ -39,11 +39,16 @@ async def send_to_user(client: Bot, message: Message):
         await message.reply_text("Usage: /sendMessage <user_id> <message>")
         return
 
-    user_id = int(message.command[1])
+    try:
+        user_id = int(message.command[1])
+    except ValueError:
+        await message.reply_text("⚠️ Invalid user ID format.")
+        return
+
     msg_to_send = " ".join(message.command[2:])
 
     try:
         await client.send_message(chat_id=user_id, text=msg_to_send)
-        await message.reply_text(f"✅ Message sent to user ID: {user_id}")
+        await message.reply_text(f"✅ Message sent to user ID: <code>{user_id}</code>", parse_mode=ParseMode.HTML)
     except Exception as e:
-        await message.reply_text(f"❌ Failed to send message: {e}")
+        await message.reply_text(f"❌ Failed to send message:\n<code>{e}</code>", parse_mode=ParseMode.HTML)
