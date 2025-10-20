@@ -15,7 +15,7 @@ async def add_user(user_id: int):
   
 # get all users 
 async def get_all_users() -> list[int]:
-  curser = _users.find({}, {_id: 1}) 
+  curser = _users.find({}, {"_id": 1}) 
   return [doc["_id"] async for doc in curser] 
   
 # delete users [bot blocked or deactivated account cleanup] 
