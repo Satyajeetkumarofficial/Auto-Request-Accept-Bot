@@ -33,7 +33,7 @@ async def list_users(client: Bot, message: Message):
 
 
 # --- /sendMessage <user_id> <message> --- #
-@Bot.on_message(filters.command("sendMessage") & filters.private & filters.user(OWNER_ID))
+@Bot.on_message(filters.command("sendmessage") & filters.private & filters.user(OWNER_ID))
 async def send_to_user(client: Bot, message: Message):
     if len(message.command) < 3:
         await message.reply_text("Usage: /sendMessage <user_id> <message>")
