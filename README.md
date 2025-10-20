@@ -10,6 +10,10 @@ This bot can accept join requests in channels automatically.
 
 - Broadcast Feature [Just send any thing and click confirm button to send broadcast to all users] 
 
+- Users Section [see users details and can send indivisual user message] 
+
+
+# Upcoming Features
 - Next Feature [Pin Broadcast Message]
 
 
