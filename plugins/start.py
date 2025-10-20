@@ -16,7 +16,8 @@ async def start_command(client: Client, message: Message):
   # save user id to mongodb
   await add_user(message.from_user.id) 
   
-  bot_username = await client.get_me() # username get
+  bot = await client.get_me() # obj
+  bot_username = bot.username # username
   # buttons 
   reply_btns = InlineKeyboardMarkup(
     [
