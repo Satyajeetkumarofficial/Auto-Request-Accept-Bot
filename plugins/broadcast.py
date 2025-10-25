@@ -20,9 +20,14 @@ async def broadcast_handler(client: Bot, message):
 
     keyboard = InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("ʙʀᴏᴀᴅᴄᴀsᴛ", callback_data="confirm"),
-            InlineKeyboardButton("ᴄᴀɴᴄᴇʟ", callback_data="cancel")
+            InlineKeyboardButton("ʙʀᴏᴀᴅᴄᴀsᴛ", callback_data="broadcast")
         ]
+        [
+            InlineKeyboardButton("ᴘɪɴ-ᴄᴀsᴛ", callback_data="pbroadcast"),
+            InlineKeyboardButton("ᴅᴇʟ-ᴄᴀsᴛ", callback_data="dbroadcast")
+        ]
+            InlineKeyboardButton("ᴄᴀɴᴄᴇʟ", callback_data="cancel")
+        
     ])
 
     await message.reply_text(
@@ -31,7 +36,7 @@ async def broadcast_handler(client: Bot, message):
     )
 
 # handle confirm or cancel callback 
-@Bot.on_callback_query(filters.regex("^(confirm|cancel)$")) 
+@Bot.on_callback_query(filters.regex("^(confirm|cancel|pbroadcast|dbroadcast)$")) 
 async def confirm(client: Bot, query: CallbackQuery):
 
     # ------ Confirm -------#
@@ -47,6 +52,15 @@ async def confirm(client: Bot, query: CallbackQuery):
             await start_broadcast(client, query.message, msg)
         finally:
             broadcast_cache.pop(query.from_user.id, None)
+
+
+    # ------ Pin Broadcast --------#
+    if query_data == "dbroadcast":
+        delete_after = 0
+        
+        await query.message.reply_text("sᴇɴᴅ ʙʀᴏᴀᴅᴄᴀsᴛ ᴍᴇssᴀɢᴇ ᴅᴇʟᴇᴛᴇ ᴛɪᴍᴇ ɪɴ sᴇᴄ.")
+
+
 
     # ------- Cancel --------#
     elif query.data == "cancel":
