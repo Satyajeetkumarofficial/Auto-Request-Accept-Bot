@@ -57,7 +57,7 @@ async def confirm(client: Bot, query: CallbackQuery):
 
 
     # ------ Pin Broadcast --------#
-    if query_data == "dbroadcast":
+    if query.data == "dbroadcast":
         delete_after = 0
         
         await query.message.reply_text("sᴇɴᴅ ʙʀᴏᴀᴅᴄᴀsᴛ ᴍᴇssᴀɢᴇ ᴅᴇʟᴇᴛᴇ ᴛɪᴍᴇ ɪɴ sᴇᴄ.")
