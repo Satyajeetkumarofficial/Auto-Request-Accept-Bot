@@ -25,8 +25,10 @@ async def broadcast_handler(client: Bot, message):
         [
             InlineKeyboardButton("ᴘɪɴ-ᴄᴀsᴛ", callback_data="pbroadcast"),
             InlineKeyboardButton("ᴅᴇʟ-ᴄᴀsᴛ", callback_data="dbroadcast")
-        ]
+        ],
+        [
             InlineKeyboardButton("ᴄᴀɴᴄᴇʟ", callback_data="cancel")
+        ]
         
     ])
 
