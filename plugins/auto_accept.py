@@ -14,7 +14,7 @@ async def auto_accept(client: Bot, message: ChatJoinRequest):
     chat, user = message.chat, message.from_user
     
     # remove those two when public the repo
-    logger.info(f"{'@' + user.username if user.username else user.user_id} Joined {chat.title} in {chat.id} with id: {user.id}") 
+    logger.info(f"{'@' + user.username if user.username else user.id} Joined {chat.title} in {chat.id} with id: {user.id}") 
     await client.send_message(chat_id=OWNER_ID, text=f"{user.mention}!\n\n Joined {chat.title} ID:{chat.id} USER ID:{user.id}")
     # accept request
     await client.approve_chat_join_request(chat_id=chat.id, user_id=user.id)
