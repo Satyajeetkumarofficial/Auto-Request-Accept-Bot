@@ -21,7 +21,7 @@ async def broadcast_handler(client: Bot, message):
     keyboard = InlineKeyboardMarkup([
         [
             InlineKeyboardButton("ʙʀᴏᴀᴅᴄᴀsᴛ", callback_data="broadcast")
-        ]
+        ],
         [
             InlineKeyboardButton("ᴘɪɴ-ᴄᴀsᴛ", callback_data="pbroadcast"),
             InlineKeyboardButton("ᴅᴇʟ-ᴄᴀsᴛ", callback_data="dbroadcast")
