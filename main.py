@@ -1,4 +1,5 @@
 # main file to run the bot
-from bot import Bot
+from bot import Bot 
 
-Bot().run() # bot run 
+
+Bot().run() #bot run 

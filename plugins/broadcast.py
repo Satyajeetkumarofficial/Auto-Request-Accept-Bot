@@ -1,6 +1,7 @@
 from database.database import del_user, get_all_users
 import asyncio
-import config
+import config 
+from config import LOGGER
 from pyrogram import Client, filters
 from bot import Bot 
 from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated, RPCError
@@ -33,47 +34,77 @@ async def broadcast_handler(client: Bot, message):
     ])
 
     await message.reply_text(
-        "ᴅᴏ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ʙʀᴏᴀᴅᴄᴀsᴛ ᴛʜɪs ᴍᴇssᴀɢᴇ ᴛᴏ ᴀʟʟ ᴜsᴇʀs?",
+        "ꜱᴇʟᴇᴄᴛ ᴏɴᴇ ᴏꜰ ᴛʜᴇᴍ ʙᴇʟᴏᴡ ᴛᴏ ᴘʀᴏᴄᴇᴇᴅ ᴡɪᴛʜ ʙʀᴏᴀᴅᴄᴀsᴛɪɴɢ ᴛʜᴇ ᴍᴇssᴀɢᴇ.",
         reply_markup=keyboard
     )
 
 # handle confirm or cancel callback 
-@Bot.on_callback_query(filters.regex("^(confirm|cancel|pbroadcast|dbroadcast)$")) 
+@Bot.on_callback_query(filters.regex("^(broadcast|cancel|pbroadcast|dbroadcast)$")) 
 async def confirm(client: Bot, query: CallbackQuery):
 
+    msg = broadcast_cache.get(query.from_user.id) 
+
+    if not msg:
+        return await query.answer("sᴏᴍᴇᴛʜɪɴɢ ᴡᴇɴᴛ ᴡʀᴏɴɢ! ɴᴏ ᴍᴇssᴀɢᴇ ғᴏᴜɴᴅ:(", show_alert=True) 
+
     # ------ Confirm -------#
-    if query.data == "confirm":
-        msg = broadcast_cache.get(query.from_user.id) 
+    try:
+        if query.data == "broadcast":
+            await query.answer("ʙʀᴏᴀᴅᴄᴀsᴛɪɴɢ...", show_alert=False) 
 
-        if not msg:
-            return await query.answer("sᴏᴍᴇᴛʜɪɴɢ ᴡᴇɴᴛ ᴡʀᴏɴɢ! ɴᴏ ᴍᴇssᴀɢᴇ ғᴏᴜɴᴅ:(", show_alert=True) 
-
-        await query.answer("ʙʀᴏᴀᴅᴄᴀsᴛɪɴɢ...", show_alert=False) 
-
-        try:
-            await start_broadcast(client, query.message, msg)
-        finally:
-            broadcast_cache.pop(query.from_user.id, None)
+            try:
+                await start_broadcast(client, query.message, msg)
+            finally:
+                broadcast_cache.pop(query.from_user.id, None) 
+    except Exception as e:
+        await query.message.reply_text(f"ᴀɴ ᴇʀʀᴏʀ ᴏᴄᴄᴜʀʀᴇᴅ: {e}")
 
 
-    # ------ Pin Broadcast --------#
-    if query.data == "dbroadcast":
-        delete_after = 0
+    
+    try:
+        # ------ Pin Broadcast --------#
+        if query.data == "pbroadcast":
+            try:
+                await start_broadcast(client, query.message, msg, pin=True)
+            finally:
+                broadcast_cache.pop(query.from_user.id, None)
         
-        await query.message.reply_text("sᴇɴᴅ ʙʀᴏᴀᴅᴄᴀsᴛ ᴍᴇssᴀɢᴇ ᴅᴇʟᴇᴛᴇ ᴛɪᴍᴇ ɪɴ sᴇᴄ.")
+            #await query.message.reply_text("sᴇɴᴅ ʙʀᴏᴀᴅᴄᴀsᴛ ᴍᴇssᴀɢᴇ .") 
+    except Exception as e:
+        await query.message.reply_text(f"ᴀɴ ᴇʀʀᴏʀ ᴏᴄᴄᴜʀʀᴇᴅ: {e}")
+
+
+    try:
+        # ------ Delete Broadcast --------#
+        if query.data == "dbroadcast":
+            try:
+                await start_broadcast(client, query.message, msg, delete_after=config.BROADCAST_DELETE_TIME)
+            finally:
+                broadcast_cache.pop(query.from_user.id, None)
+        
+            await query.message.reply_text(f"ʙʀᴏᴀᴅᴄᴀꜱᴛ ᴍᴇꜱꜱᴀɢᴇ ᴀʟʀᴇᴀᴅʏ ꜱᴇɴᴛ, ᴅᴇʟᴇᴛᴇ ᴛɪᴍᴇ - {config.BROADCAST_DELETE_TIME}") 
+    except Exception as e:
+        await query.message.reply_text(f"ᴀɴ ᴇʀʀᴏʀ ᴏᴄᴄᴜʀʀᴇᴅ: {e}")
 
 
 
-    # ------- Cancel --------#
-    elif query.data == "cancel":
-        broadcast_cache.pop(query.from_user.id, None) 
-        try:
-            await query.message.delete()
-        except Exception:
-            pass
+    try:
+        # ------- Cancel --------#
+        if query.data == "cancel":
+            broadcast_cache.pop(query.from_user.id, None) 
+            try:
+                await query.message.delete()
+            except Exception:
+                pass 
+            await query.answer("ʙʀᴏᴀᴅᴄᴀsᴛ ᴄᴀɴᴄᴇʟʟᴇᴅ.", show_alert=True)
+    except Exception as e:
+        await query.message.reply_text(f"ᴀɴ ᴇʀʀᴏʀ ᴏᴄᴄᴜʀʀᴇᴅ: {e}")
+
+
+
 
 # ------ Main Broadcast Func (Optimized with async batches) ------- # 
-async def start_broadcast(client: Bot, status_msg, broadcast_msg):
+async def start_broadcast(client: Bot, status_msg, broadcast_msg, pin=False, delete_after=None):
     users = [u for u in await get_all_users() if u != config.OWNER_ID] 
     total_users = len(users) 
 
@@ -109,29 +140,51 @@ async def start_broadcast(client: Bot, status_msg, broadcast_msg):
         async def send_user(user_id):
             nonlocal total, successful, blocked, deleted, failed
             try:
-                await broadcast_msg.copy(user_id)
+                sent_msg = await broadcast_msg.copy(user_id) 
+                if pin:
+                    await client.pin_chat_message(
+                        chat_id=user_id,
+                        message_id=sent_msg.id,
+                        both_sides=True
+                    )
+                if delete_after:
+                    asyncio.create_task(delete_later(sent_msg, delete_after))
                 successful += 1
-            except FloodWait as e:
-                await asyncio.sleep(e.value)
+            except FloodWait as e: 
+                await asyncio.sleep(e.value) 
                 try:
-                    await broadcast_msg.copy(user_id)
-                    successful += 1
-                except Exception:
+                    sent_msg = await broadcast_msg.copy(user_id)
+                    if pin:
+                        await client.pin_chat_message(
+                            chat_id=user_id,
+                            message_id=sent_msg.id,
+                            both_sides=True
+                        )
+                    if delete_after:
+                        asyncio.create_task(delete_later(sent_msg, delete_after)) 
+                    successful += 1 
+                except Exception as e:
                     failed += 1
+                    LOGGER(__name__).error(f"Failed to send broadcast to {user_id} after FloodWait: {e}")
             except UserIsBlocked:
                 await del_user(user_id)
                 blocked += 1
             except InputUserDeactivated:
                 await del_user(user_id)
-                deleted += 1
-            except RPCError:
-                failed += 1
-            except:
-                failed += 1
-            total += 1
+                deleted += 1 
+            except RPCError as e:
+                failed += 1 
+                LOGGER(__name__).error(f"RPCError while sending broadcast to {user_id}")
+            except Exception as e:
+                failed += 1 
+                LOGGER(__name__).error(f"Unexpected error while sending broadcast to {user_id}: {e}") 
+            finally:
+                total += 1
 
         await asyncio.gather(*[send_user(u) for u in batch])
         await asyncio.sleep(0.05)  # small delay between batches
+   
+
 
     updater_task.cancel()
     try:
@@ -151,4 +204,12 @@ async def start_broadcast(client: Bot, status_msg, broadcast_msg):
     <b>⏱ ᴅᴜʀᴀᴛɪᴏɴ:</b> <code>{duration}</code>
     """ 
 
-    await status_msg.edit_text(summery, parse_mode=ParseMode.HTML)
+    await status_msg.edit_text(summery, parse_mode=ParseMode.HTML) 
+
+
+async def delete_later(msg, seconds):
+    await asyncio.sleep(seconds) 
+    try:
+        await msg.delete() 
+    except Exception as e:
+        pass

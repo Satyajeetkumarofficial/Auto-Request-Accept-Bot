@@ -12,17 +12,25 @@ async def list_users(client: Bot, message: Message):
     total_users = len(users)
 
     if total_users == 0:
-        await message.reply_text("No users found in database.")
+        await message.reply_text("ɴᴏ ᴜꜱᴇʀꜱ ꜰᴏᴜɴᴅ ɪɴ ᴅᴀᴛᴀʙᴀꜱᴇ.")
         return
 
-    reply_text = f"<b>Total Users:</b> {total_users}\n\n"
-    
-    for idx, user_id in enumerate(users, 1):
-        try:
-            user = await client.get_users(user_id)  # Fetch current Telegram info
-            reply_text += f"{idx}. <a href='tg://user?id={user.id}'>{user.first_name}</a> ID: {user.id}\n"
+    reply_text = f"<b>ᴛᴏᴛᴀʟ ᴜꜱᴇʀꜱ:</b> {total_users}\n\n" 
+
+    # Batch fetch users in chunks of 200 (Telegram limit for get_users)
+    chunk_size = 200  # Number of users per message chunk
+    for i in range(0, total_users, chunk_size):
+        batch_ids = users[i:i + chunk_size] 
+        try: 
+            batch_user = await client.get_users(batch_ids) # returns list of User objects 
+            if not isinstance(batch_user, list):
+                batch_user = [batch_user] 
+            
+            for idx, user in enumerate(i + 1):
+                reply_text += f"{idx}. <a href='tg://user?id={user.id}'>{user.first_name}</a> ɪᴅ: {user.id}\n"
         except Exception:
-            reply_text += f"{idx}. User ID: {user_id} (Cannot fetch info)\n"
+            for idx, user_id in enumerate(batch_ids, i + 1):
+                reply_text += f"{idx}. ᴜꜱᴇʀ ɪᴅ: {user_id} !!\n"
 
     # Split message if too long
     if len(reply_text) > 4000:
@@ -36,19 +44,19 @@ async def list_users(client: Bot, message: Message):
 @Bot.on_message(filters.command("sendmessage") & filters.private & filters.user(OWNER_ID))
 async def send_to_user(client: Bot, message: Message):
     if len(message.command) < 3:
-        await message.reply_text("Usage: /sendMessage <user_id> <message>")
+        await message.reply_text("ᴜꜱᴀɢᴇ: /ꜱᴇɴᴅᴍᴇꜱꜱᴀɢᴇ <ᴜꜱᴇʀ_ɪᴅ> <ᴍᴇꜱꜱᴀɢᴇ>")
         return
 
     try:
         user_id = int(message.command[1])
     except ValueError:
-        await message.reply_text("⚠️ Invalid user ID format.")
+        await message.reply_text("!! ɪɴᴠᴀʟɪᴅ ᴜꜱᴇʀ ɪᴅ ꜰᴏʀᴍᴀᴛ.")
         return
 
     msg_to_send = " ".join(message.command[2:])
 
     try:
         await client.send_message(chat_id=user_id, text=msg_to_send)
-        await message.reply_text(f"✅ Message sent to user ID: <code>{user_id}</code>", parse_mode=ParseMode.HTML)
+        await message.reply_text(f" ᴍᴇꜱꜱᴀɢᴇ ꜱᴇɴᴛ ᴛᴏ ᴜꜱᴇʀ ɪᴅ:<code>{user_id}</code>", parse_mode=ParseMode.HTML)
     except Exception as e:
-        await message.reply_text(f"❌ Failed to send message:\n<code>{e}</code>", parse_mode=ParseMode.HTML)
+        await message.reply_text(f" ꜰᴀɪʟᴇᴅ ᴛᴏ ꜱᴇɴᴅ ᴍᴇꜱꜱᴀɢᴇ:\n<code>{e}</code>", parse_mode=ParseMode.HTML)

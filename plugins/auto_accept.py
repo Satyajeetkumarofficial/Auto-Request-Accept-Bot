@@ -17,7 +17,10 @@ async def auto_accept(client: Bot, message: ChatJoinRequest):
     logger.info(f"{'@' + user.username if user.username else user.id} Joined {chat.title} in {chat.id} with id: {user.id}") 
     await client.send_message(chat_id=OWNER_ID, text=f"{user.mention}!\n\n Joined {chat.title} ID:{chat.id} USER ID:{user.id}")
     # accept request
-    await client.approve_chat_join_request(chat_id=chat.id, user_id=user.id)
+    await client.approve_chat_join_request(chat_id=chat.id, user_id=user.id) 
+
+    # save user id to mongodb
+    await add_user(user.id)
     
     # generate invite link 
     try:
