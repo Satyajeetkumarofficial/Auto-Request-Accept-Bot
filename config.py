@@ -20,10 +20,10 @@ START_MSG = os.environ.get(
 )
 ABOUT_MSG = """
 <b>›› ᴀʙᴏᴜᴛ ᴍᴇ:</b>
-◧ ᴏᴡɴᴇʀ: <a href='https://t.me/OnlyNoco'>ᴏɴʟʏɴᴏᴄᴏ</a>
-◧ ᴘᴏʀᴛғᴏʟɪᴏ: <a href='https://onlynoco.vercel.app'>ᴄʟɪᴄᴋ ʜᴇʀᴇ</a>
-◧ ʀᴇᴘᴏ: <a href='https://github.com/OnlyNoco/Auto-Request-Accept-Bot'>ɢɪᴛʜᴜʙ</a>
-◧ ʟɪʙs ~ <a href='https://github.com/Mayuri-Chan/pyrofork'>ᴘʏʀᴏғᴏʀᴋ</a> • <a href='https://www.python.org/'>ᴘʏᴛʜᴏɴ</a> • <a href='https://www.mongodb.com/'>ᴍᴏɴɢᴏᴅʙ</a>
+◧ ᴏᴡɴᴇʀ: <a href='https://t.me/OnlyNoco'>ꜱᴀᴛʏᴀᴊᴇᴇᴛ</a>
+◧ ᴍʏ ɴᴀᴍᴇ: <a href='https://t.me/AutoAcceptorProBot'>ᴀᴜᴛᴏ ᴀᴄᴄᴇᴘᴛᴏʀ ʙᴏᴛ</a>
+◧ ᴄʜᴀɴɴᴇʟ: <a href='https://t.me/ProBotUpdate'>ᴄʟɪᴄᴋ ʜᴇʀᴇ</a>
+◧ ʟɪʙs ~ <a href='https://www.python.org/'>ᴘʏᴛʜᴏɴ</a> • <a href='https://www.mongodb.com/'>ᴍᴏɴɢᴏᴅʙ</a>
 
 ◧ ᴏᴜʀ sᴇʀᴠɪᴄᴇs ~
 ⊡ <a href='https://t.me/+O7PeEMZOAoMzYzVl'>ʜᴇɴᴛᴀɪ ᴄʀɪsᴘ</a>
